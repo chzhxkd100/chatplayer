@@ -22,7 +22,7 @@ public class AuthtestApplication {
     private static final String CLIENT_ID = "bd9b4d44-58ad-4926-92ef-54ea24f2b9cc";
     private static final String CLIENT_SECRET = "AG_HCaJOj_F2SS4_LQXdA_z07SVvZKKmsvi09M_soI8";
     private static final String REDIRECT_URI = "http://localhost:8080/callback";
-    private static final String STATE = "czxczx312321";
+    private static final String STATE = "czxczx312321"; // 아무거나입력하면된다
     private static final String API_BASE = "https://openapi.chzzk.naver.com";
 
     public static void main(String[] args) {
@@ -31,6 +31,9 @@ public class AuthtestApplication {
 
     @GetMapping("/login")
     public ResponseEntity<Void> loginRedirect() {
+
+        // /login 으로 접속하면 OAuth 로 리다이렉트 되게 함
+        // Auth 진행 후 http://localhost:8080/callback (앱 등록 시 등록한 Redirect URL 으로 또 리다이렉트 옴)
         URI authUri = UriComponentsBuilder
                 .fromUriString("https://chzzk.naver.com/account-interlock")
                 .queryParam("clientId", CLIENT_ID)
@@ -44,10 +47,7 @@ public class AuthtestApplication {
     }
 
     @GetMapping("/callback")
-    public String callback(
-            @RequestParam String code,
-            @RequestParam String state
-    ) throws UnsupportedEncodingException {
+    public String callback( @RequestParam String code, @RequestParam String state) throws UnsupportedEncodingException {
         System.out.println("code: " + code);
         System.out.println("state: " + state);
 
