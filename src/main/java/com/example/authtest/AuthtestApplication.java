@@ -53,12 +53,14 @@ public class AuthtestApplication {
 
         RestTemplate restTemplate = new RestTemplate();
 
+        // 인증 요청 응답 파싱
         String body = "grantType=authorization_code" +
                 "&clientId=" + URLEncoder.encode(CLIENT_ID, StandardCharsets.UTF_8) +
                 "&clientSecret=" + URLEncoder.encode(CLIENT_SECRET, StandardCharsets.UTF_8) +
                 "&code=" + URLEncoder.encode(code, StandardCharsets.UTF_8) +
                 "&state=" + URLEncoder.encode(state, StandardCharsets.UTF_8);
 
+        // Access Token 발급 요청 헤더
         String jsonBody = String.format(
                 "{\"grantType\": \"authorization_code\", \"clientId\": \"%s\", \"clientSecret\": \"%s\", \"code\": \"%s\", \"state\": \"%s\"}",
                 CLIENT_ID, CLIENT_SECRET, code, state);
@@ -70,12 +72,25 @@ public class AuthtestApplication {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
 
+        //Access Token 발급 요청
         ResponseEntity<String> tokenResponse = restTemplate.exchange(
                 API_BASE + "/auth/v1/token",
                 HttpMethod.POST,
                 requestEntity,
                 String.class
         );
+
+        /*
+        * Response Body
+        * KEY               TYPE            EXAMPLE
+        * accessToken       String          FFok65zQFQVcFvH2eJ7SS7SBFlTXt0EZ10L5XXXXXXXX
+        * refreshToken                      NWG05CKHAsz4k4d3PB0wQUV9ugGlp0YuibQ4XXXXXXXX
+        * tokenType                         Bearer 고정
+        * expiresIn                         86400
+        *
+        */
+
+        // 여기에 응답으로 다시 세션API로 요청보내고, 그응답으로 또 얻어서 채팅메시지얻고또 그걸로
 
         return "토큰 응답: " + tokenResponse.getBody();
     }
