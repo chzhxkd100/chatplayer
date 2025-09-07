@@ -57,4 +57,9 @@ public class ChzzkApiService {
 
         return responseEntity.getBody();
     }
+
+    public void createSession(){
+        // 세션 생성 -> URL 얻음 -> SOCKET.IO 연결 (연결완료메시지 확인) -> 채팅 이벤트 SessionKey 요청 ->
+
+    }
 }
