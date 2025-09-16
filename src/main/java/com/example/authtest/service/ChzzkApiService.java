@@ -1,5 +1,8 @@
 package com.example.authtest.service;
 
+import com.example.authtest.context.ServerContext;
+import com.example.authtest.dto.ChzzkToken;
+import com.example.authtest.dto.CreateUrlResponse;
 import com.example.authtest.dto.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -60,6 +63,24 @@ public class ChzzkApiService {
 
     public void createSession(){
         // 세션 생성 -> URL 얻음 -> SOCKET.IO 연결 (연결완료메시지 확인) -> 채팅 이벤트 SessionKey 요청 ->
+        String url = API_BASE + "/open/v1/sessions/auth";
+        ChzzkToken token = ServerContext.getChzzkToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token.getAccessToken());
+        HttpEntity<Map<String,String>> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<CreateUrlResponse> responseEntity = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                CreateUrlResponse.class);
+
+        assert responseEntity.getBody() != null;
+        String sessionUrl = responseEntity.getBody().getUrl();
+
+        
 
     }
 }
